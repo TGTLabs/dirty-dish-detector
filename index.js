@@ -26,10 +26,9 @@ function _post(url, data) {
 }
 
 var messageTemplate = {
-	"username": "Afsoon",
+	"username": "MugShot",
 	"channel": "bot", //TODO Update Channel
 	"icon_emoji": ":rage:",
-	"attachments": "[]"
 }
 
 app.post('/push/img', (req, res) => {
@@ -38,15 +37,18 @@ app.post('/push/img', (req, res) => {
 	for (let key in messageTemplate) {
 		message[key] = messageTemplate[key];
 	}
-	let msgAttachments = JSON.parse(message["attachments"]);
+	let msgAttachments = [];
 	msgAttachments.push({
 		"title": "Shame on you!",
-		"text": "Here's the worst employee of the month!",
+		"text": "for leaving dirty dishes in the kitchen sink! \nHere's a headshot of the worst employee of the month!",
 		"image_url": img_url
 	}); 
 	message["attachments"] = msgAttachments;
-	_post(incomingWebhookURL, message).then(() => {
+	_post(incomingWebhookURL, message)
+	// success posting message
+	.then(() => {
 		res.sendStatus(200);
+	// failure posting message
 	}).catch((err) => {
 		console.log('Failed post request. Status code = ', res.statusCode);
 	});
