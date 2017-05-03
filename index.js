@@ -24,14 +24,18 @@ var messageTemplate = {
 	"username": "Afsoon",
 	"channel": "bot2", //TODO Update Channel
 	"icon_emoji": ":rage:",
-	"text": "Really?????"
+	"attachments": []
 }
 
 app.post('/push/img', (req, res) => {
 	let img_url = req.body.img_url;
 	let message = Object.assign(messageTemplate);
-	message["text"] = img_url;
-	_post(incomingWebhookURL, messageTemplate);
+	message.attachments.push({
+		"title": "Shame on you!",
+		"text": "Here's the worst employee of the month!",
+		"image_url": img_url
+	}); 
+	_post(incomingWebhookURL, message);
 
 });
 
