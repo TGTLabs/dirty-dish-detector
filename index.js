@@ -41,7 +41,8 @@ app.post('/push/img', (req, res) => {
 	msgAttachments.push({
 		"title": "Shame on you!",
 		"text": "for leaving dirty dishes in the kitchen sink! \nHere's a headshot of the worst employee of the month!",
-		"image_url": img_url
+		// "image_url": img_url
+		"image_url": "http://localhost:8100/"
 	}); 
 	message["attachments"] = msgAttachments;
 	_post(incomingWebhookURL, message)
@@ -57,3 +58,4 @@ app.post('/push/img', (req, res) => {
 app.listen(port, () => {
 	console.log(`server listening on ${port}`);
 });
+
