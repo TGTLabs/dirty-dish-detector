@@ -15,8 +15,7 @@ function _post(url, data) {
 	};
 	request(options, (err, res, body) => {
 		if (err) {
-			console.log(err);
-			// console.log('Failed post request. Status code = ', res.statusCode);
+			console.log('Failed post request. Status code = ', res.statusCode);
 		}
 	});
 }
