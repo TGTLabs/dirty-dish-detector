@@ -7,9 +7,17 @@ const request = require('request');
 const bodyParser = require('body-parser');
 const incomingWebhookURL = process.env.SLACK_WEBHOOK_URL;
 const token = process.env.SLACK_TOKEN;
+const multer  = require('multer');
+const upload = multer({ dest: 'uploads/' });
 const Promise = require('promise');
 const app = express();
 app.use(bodyParser.json());
+
+app.use(express.static(path.join(__dirname, './www')));
+
+app.get('*', function(req, res){
+	res.sendFile(path.join(__dirname, './www/index.html'));
+});
 
 function _post(url, data) {
 	return new Promise((resolve, reject) => {
@@ -65,9 +73,9 @@ app.post('/push/img', (req, res) => {
 	    formData: {
 	        token: token,
 	        title: "MugShots",
-	        // filename: "/Users/z002lzs/Documents/Target/Hackathon/dirty-dish-detector/assets/uglyFace.jpg",
+	        // filename: "", //TODO Maybe sth with the name of the person?
 	        filetype: "auto",
-	        channels: "#bot2",
+	        channels: "#bot",
 	        initial_comment: "Shame on you!",
 	        file: fs.createReadStream("/Users/z002lzs/Documents/Target/Hackathon/dirty-dish-detector/assets/uglyFace.jpg")
 	    },
@@ -77,6 +85,27 @@ app.post('/push/img', (req, res) => {
 		}
 	    console.log(JSON.parse(response.body));
 		});
+});
+
+app.post('/upload', upload.single('mugshot'), (req, res) => {
+	request.post({
+	    url: 'https://slack.com/api/files.upload',
+	    formData: {
+	        token: token,
+	        title: "MugShots",
+	        // filename: "", //TODO Maybe sth with the name of the person?
+	        filetype: "auto",
+	        channels: "#bot",
+	        initial_comment: "Shame on you!",
+	        file: fs.createReadStream(req.file.path)
+	    },
+	}, function (err, response) {
+		if (err) {
+			console.log('Failure posting image', err);
+		} else {
+	    res.status(200).redirect('/');
+		}
+	});
 });
 
 
