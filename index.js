@@ -17,6 +17,28 @@ app.get('*', function(req, res){
 	res.sendFile(path.join(__dirname, './www/index.html'));
 });
 
+app.post('/upload', upload.single('mugshot'), (req, res) => {
+	request.post({
+	    url: 'https://slack.com/api/files.upload',
+	    formData: {
+	        token: token,
+	        title: "MugShots",
+	        // filename: "", //TODO Maybe sth with the name of the person?
+	        filetype: "auto",
+	        channels: "#bot",
+	        initial_comment: ":-)",
+	        file: fs.createReadStream(req.file.path)
+	    },
+	}, function (err, response) {
+		if (err) {
+			console.log('Failure posting image', err);
+		} else {
+	    res.status(200).redirect('/');
+		}
+	});
+});
+
+
 function _post(url, data) {
 	return new Promise((resolve, reject) => {
 		let options = {
@@ -65,26 +87,6 @@ function _post(url, data) {
 // });
 
 
-app.post('/upload', upload.single('mugshot'), (req, res) => {
-	request.post({
-	    url: 'https://slack.com/api/files.upload',
-	    formData: {
-	        token: token,
-	        title: "MugShots",
-	        // filename: "", //TODO Maybe sth with the name of the person?
-	        filetype: "auto",
-	        channels: "#bot",
-	        initial_comment: "Shame on you!",
-	        file: fs.createReadStream(req.file.path)
-	    },
-	}, function (err, response) {
-		if (err) {
-			console.log('Failure posting image', err);
-		} else {
-	    res.status(200).redirect('/');
-		}
-	});
-});
 
 
 app.listen(port, () => {
