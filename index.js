@@ -5,15 +5,13 @@ const express = require('express');
 const port = process.env.PORT || 8100;
 const request = require('request');
 const bodyParser = require('body-parser');
-const incomingWebhookURL = process.env.SLACK_WEBHOOK_URL;
 const token = process.env.SLACK_TOKEN;
 const multer  = require('multer');
 const upload = multer({ dest: 'uploads/' });
-const Promise = require('promise');
+// const incomingWebhookURL = process.env.SLACK_WEBHOOK_URL;
+// const Promise = require('promise');
 const app = express();
 app.use(bodyParser.json());
-
-app.use(express.static(path.join(__dirname, './www')));
 
 app.get('*', function(req, res){
 	res.sendFile(path.join(__dirname, './www/index.html'));
@@ -67,26 +65,6 @@ function _post(url, data) {
 // });
 
 
-app.post('/push/img', (req, res) => {
-	request.post({
-	    url: 'https://slack.com/api/files.upload',
-	    formData: {
-	        token: token,
-	        title: "MugShots",
-	        // filename: "", //TODO Maybe sth with the name of the person?
-	        filetype: "auto",
-	        channels: "#bot",
-	        initial_comment: "Shame on you!",
-	        file: fs.createReadStream("/Users/z002lzs/Documents/Target/Hackathon/dirty-dish-detector/assets/uglyFace.jpg")
-	    },
-	}, function (err, response) {
-		if (err) {
-			console.log(err);
-		}
-	    console.log(JSON.parse(response.body));
-		});
-});
-
 app.post('/upload', upload.single('mugshot'), (req, res) => {
 	request.post({
 	    url: 'https://slack.com/api/files.upload',
@@ -107,8 +85,6 @@ app.post('/upload', upload.single('mugshot'), (req, res) => {
 		}
 	});
 });
-
-
 
 
 app.listen(port, () => {
